@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 			$stmt = $dbh->prepare($sql);
 			$response = $stmt->execute();
 			http_response_code(200);
-			echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC))
+			echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			exit();
 
 		} catch (PDOException $e) {
