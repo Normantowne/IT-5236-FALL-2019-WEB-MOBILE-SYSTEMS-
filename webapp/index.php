@@ -65,7 +65,7 @@ curl_close($ch);
 				</form>
 			</div>
 
-			<?php if ($http_status_code != 200) ?>
+			<?php if ($http_status_code != 200) { ?>
 			<div class="error">
 				Uh oh! There was an error reading the to do list.
 			</div>
