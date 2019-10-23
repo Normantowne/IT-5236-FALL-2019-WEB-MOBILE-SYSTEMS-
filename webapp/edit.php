@@ -4,28 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-
-// Declare the credentials to the database
-$dbconnecterror = FALSE;
-$dbh = NULL;
-
-require_once 'credentials.php';
-
-try{
-	
-	$conn_string = "mysql:host=".$dbserver.";dbname=".$db;
-	
-	$dbh= new PDO($conn_string, $dbusername, $dbpassword);
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	
-}catch(Exception $e){
-	$dbconnecterror = TRUE;
-}
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-	
+
 	$listID = $_POST['listID'];
-	
+
 	if (array_key_exists('fin', $_POST)) {
 		$complete = 1;
 	} else {
@@ -37,27 +19,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$finBy = $_POST['finBy'];
 	}
 	$listItem = $_POST['listItem'];
-	
 
-	if (!$dbconnecterror) {
-		try {
-			$sql = "UPDATE doList SET complete=:complete, listItem=:listItem, finishDate=:finishDate WHERE listID=:listID";
-			$stmt = $dbh->prepare($sql);			
-			$stmt->bindParam(":complete", $complete);
-			$stmt->bindParam(":listItem", $listItem);
-			$stmt->bindParam(":finishDate", $finBy);
-			$stmt->bindParam(":listID", $listID);
+	$url = "http://3.208.74.116/api/task.php?listID=$listID";
+	$data = json_encode([
+		'completed' => $complete,
+		'taskName' => $listItem,
+		'taskDate' => $finBy
+	]);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, [
+		'Content-Type: application/json',
+		'Content-Length: ' . strlen($data)
+	]);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$response  = curl_exec($ch);
+	$http_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
 
-			$response = $stmt->execute();	
-			
-			header("Location: index.php");
-			
-		} catch (PDOException $e) {
-			header("Location: index.php?error=edit");
-			
-		}	
+	if ($http_status_code == 204) {
+		header("Location: index.php");
 	} else {
 		header("Location: index.php?error=edit");
 	}
 }
-?>
