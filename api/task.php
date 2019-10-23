@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == "PUT") {
 		echo "ID error";
 		exit();
 	}
-	var_dump
 
 	//decoding the json body from the request
     $task = json_decode(file_get_contents('php://input'), true);
