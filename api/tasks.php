@@ -26,9 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 		try {
 			$sql = "SELECT * FROM doList";
 			$stmt = $dbh->prepare($sql);
-			$response = $stmt->execute();
+			$stmt->execute();
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
+			// listID => listID
+			// listName -> taskName
+			// finishDate -> taskDate
+			// complete -> completed
+			
+			$new_data = [];
+			foreach($data as $task) {
+				$task['taskName'] = $task['listName'];
+				$task['taskDate'] = $task['finishDate'];
+				$task['completed'] = $task['complete'] ? true : false;
+				$new_data[] = $task;
+			}
+			
 			http_response_code(200);
-			echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+			echo json_encode($new_data);
 			exit();
 
 		} catch (PDOException $e) {
