@@ -26,15 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
 		// listID => listID
-		// listName -> taskName
+		// listItem -> taskName
 		// finishDate -> taskDate
 		// complete -> completed
 		
 		$new_data = [];
 		foreach($data as $task) {
-			$task['taskName'] = $task['listName'];
+			$task['taskName'] = $task['listItem'];
 			$task['taskDate'] = $task['finishDate'];
 			$task['completed'] = $task['complete'] ? true : false;
+			
+			unset($task['listItem'], $task['finishDate'], $task['complete']);
 			$new_data[] = $task;
 		}
 		
