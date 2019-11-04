@@ -1,6 +1,5 @@
 <?php
 // Declare the credentials to the database
-$dbconnecterror = FALSE;
 $dbh = NULL;
 require_once 'credentials.php';
 
@@ -12,8 +11,6 @@ try{
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 }catch(Exception $e){
-	//$dbconnecterror = TRUE;
-
 	//This means we had some database issues
 	http_response_code(504);
 	exit();
@@ -64,30 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] == "PUT") {
 		exit();
 	}
 
-if (!$dbconnecterror) {
-		try {
-			$sql = "UPDATE doList SET complete=:complete, listItem=:listItem, finishDate=:finishDate WHERE listID=:listID";
-			$stmt = $dbh->prepare($sql);
-			$stmt->bindParam(":complete", $complete);
-			$stmt->bindParam(":listItem", $taskName);
-			$stmt->bindParam(":finishDate", $taskDate);
-			$stmt->bindParam(":listID", $listID);
-			$response = $stmt->execute();
-			http_response_code(204);
-			exit();
+	try {
+		$sql = "UPDATE doList SET complete=:complete, listItem=:listItem, finishDate=:finishDate WHERE listID=:listID";
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindParam(":complete", $complete);
+		$stmt->bindParam(":listItem", $taskName);
+		$stmt->bindParam(":finishDate", $taskDate);
+		$stmt->bindParam(":listID", $listID);
+		$response = $stmt->execute();
+		http_response_code(204);
+		exit();
 
-		} catch (PDOException $e) {
+	} catch (PDOException $e) {
 		//This means we had some database issues
 		http_response_code(504);
 		exit();
-
-		}
-	} else {
-		//This means we had a bad gateway
-		http_response_code(502);
-		echo "database error";
-		exit();
-
 	}
 //CREATE
 } else if ($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -123,32 +111,23 @@ if (!$dbconnecterror) {
 		exit();
 	}
 
-	if (!$dbconnecterror) {
-		try {
-			$sql = "INSERT INTO doList (listItem, finishDate, complete) VALUES (:listItem, :finishDate, :complete)";
-			$stmt = $dbh->prepare($sql);
-			$stmt->bindParam(":complete", $complete);
-			$stmt->bindParam(":listItem", $taskName);
-			$stmt->bindParam(":finishDate", $taskDate);
-			$stmt->execute();
-			$taskID = $dbh->lastInsertId();
-			http_response_code(201);
-			echo json_encode(["ID" => taskID]);
-			exit();
+	try {
+		$sql = "INSERT INTO doList (listItem, finishDate, complete) VALUES (:listItem, :finishDate, :complete)";
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindParam(":complete", $complete);
+		$stmt->bindParam(":listItem", $taskName);
+		$stmt->bindParam(":finishDate", $taskDate);
+		$stmt->execute();
+		$taskID = $dbh->lastInsertId();
+		http_response_code(201);
+		echo json_encode(["ID" => taskID]);
+		exit();
 
 
-		} catch (PDOException $e) {
+	} catch (PDOException $e) {
 		//This means we had some database issues
 		http_response_code(504);
 		exit();
-
-		}
-	} else {
-		//This means we had a bad gateway
-		http_response_code(502);
-		echo "database error";
-		exit();
-
 	}
 
 //DELETE
@@ -164,29 +143,20 @@ if (!$dbconnecterror) {
 
 	}
 
-	if (!$dbconnecterror) {
-		try {
-			//deletes all from the table where the list ID is the given list ID
-			$sql = "DELETE FROM doList WHERE listID=:listID";
-			$stmt = $dbh->prepare($sql);
-			$stmt->bindParam(":listID", $listID);
-			$response = $stmt->execute();
-			http_response_code(204);
-			exit();
+	try {
+		//deletes all from the table where the list ID is the given list ID
+		$sql = "DELETE FROM doList WHERE listID=:listID";
+		$stmt = $dbh->prepare($sql);
+		$stmt->bindParam(":listID", $listID);
+		$response = $stmt->execute();
+		http_response_code(204);
+		exit();
 
-		} catch (PDOException $e) {
+	} catch (PDOException $e) {
 		//This means we had some database issues
 		http_response_code(504);
 		echo "check your internet connection";
 		exit();
-
-		}
-	} else {
-		//This means we had a bad gateway
-		http_response_code(502);
-		echo "database error";
-		exit();
-
 	}
 } else {
 		//METHOD NOT ALLOWED
