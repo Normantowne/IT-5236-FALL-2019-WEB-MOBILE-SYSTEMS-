@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "PUT") {
     $task = json_decode(file_get_contents('php://input'), true);
 
     if (array_key_exists('completed', $task)) {
-		$complete = $task["completed"];
+		$complete = $task['completed'] ? 1 : 0;
 	} else {
 		//Could not be found
 		http_response_code(404);
@@ -95,7 +95,7 @@ if (!$dbconnecterror) {
     $task = json_decode(file_get_contents('php://input'), true);
 
   if (array_key_exists('completed', $task)) {
-		$complete = $task["completed"];
+		$complete = $task['completed'] ? 1 : 0;
 	} else {
 		//Could not be found
 		http_response_code(404);
