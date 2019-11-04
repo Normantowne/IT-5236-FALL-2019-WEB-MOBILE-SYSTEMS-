@@ -37,10 +37,10 @@ curl_close($ch);
 					<div class="list">
 						<form method="POST" action="edit.php" style="display: inline-block">
 							<input type="hidden" 	name="listID" value="<?php echo $item["listID"];?>" >
-							<input type="checkbox"	name="fin" <?php if($item["complete"]=='1'){echo "checked='checked'";} ?> >
-							<input type="text" 	name="listItem" size="50" value="<?php echo $item["listItem"];?>" maxlength="100" >
+							<input type="checkbox"	name="fin" <?php if($item["completed"]){echo "checked='checked'";} ?> >
+							<input type="text" 	name="listItem" size="50" value="<?php echo $item["taskName"];?>" maxlength="100" >
 							<span>by:</span>
-							<input type="date" 	name="finBy" value="<?php if($item['finishDate']=='0000-00-00'){echo '';} else {echo $item['finishDate'];} ?>" >
+							<input type="date" 	name="finBy" value="<?php if($item['taskDate']=='0000-00-00'){echo '';} else {echo $item['taskDate'];} ?>" >
 							<input type="submit" 	name="submitEdit" value="&check;" >
 						</form>
 						<form method="POST" action="delete.php" style="display: inline-block">
