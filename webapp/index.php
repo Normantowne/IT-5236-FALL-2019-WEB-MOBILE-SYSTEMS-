@@ -83,5 +83,58 @@ curl_close($ch);
 				</div>
 				<?php } ?>
 			<?php } ?>
+			
+			
+			<footer>
+				<div>
+					<span id="greeting" class="hide">Welcome!</span> You visited this site from this computer on <span id="time"></span>
+					<button type="button">Do Not Track Me</button>
+				</div>
+			</footer>
+			
+		<script>
+			//variables
+			var footer = document.querySelector("footer");
+			var greeting = document.querySelector("footer #greeting");
+			var time-visited = document.querySelector("footer #time");
+			var no-track = document.querySelector("footer button");
+			
+			//local storage key names (holds the content in the button for tarcking and the time span for visited
+			var STORAGE_KEY_TIME = "time-visited";
+		
+			var STORAGE_KEY_NO_TRACK = "no-track";
+			
+			//check to see if the user wants to be tracked; functions as a get item check
+			if (!localStorage.getItem(STORAGE_KEY_NO_TRACK)) {
+				
+				//Visitor has not visted the site yet; must get the date
+				if (!localStorage.getItem(STORAGE_KEY_TIME)){
+					//creates new date
+					var currentDate = new Date();
+					//creates the date and timestamp
+					var dateString = currentDate.toDateString() + " " + toLocaleTimeString("en-us");
+					
+					//sets the date into local storage
+					localStorage.setItem(STORAGE_KEY_TIME, dateString);
+					greeting.classList.remove("hide");
+				}
+					//displays the time visited 
+					var storedDate = localStorage.getItem(STORAGE_KEY_TIME);
+					
+					time-visited.innerHTML = storedDate;
+			} else {
+				
+				footer.classList.add("hide")
+			}
+			
+			//Check to see if the user chose NOT to be tracked
+			no-track.addEventListener("click", function () {
+				//removes the time storage from storage
+				localStorage.removeItem(STORAGE_KEY_TIME);
+				//sets flag to not track user again
+				localStorage.setItem(STORAGE_KEY_NO_TRACK, "TRUE");
+			});
+		</script>
 	</body>
 </html>
+
