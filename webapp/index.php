@@ -112,7 +112,7 @@ curl_close($ch);
 					//creates new date
 					var currentDate = new Date();
 					//creates the date and timestamp
-					var dateString = currentDate.toDateString() + " " + toLocaleTimeString("en-us");
+					var dateString = currentDate.toDateString() + " " + currentDate.toLocaleTimeString("en-us");
 					
 					//sets the date into local storage
 					localStorage.setItem(STORAGE_KEY_TIME, dateString);
